@@ -1,36 +1,67 @@
-// Make sure to add OPENAI_API_KEY as a secret
-
-import {
-  Configuration,
-  OpenAIApi,
-  ChatCompletionRequestMessageRoleEnum,} from "openai";
+import OpenAI from "openai";
 import type { NextApiRequest, NextApiResponse } from "next";
 
-
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
+const openai = new OpenAI({
+  apiKey: "sk-proj-4KPKTxwkL74wH4m764rAT3BlbkFJPnZsGEi1nFgJWU1bquhS",
 });
 
-const openai = new OpenAIApi(configuration);
+export default async function chatHandler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'POST') {
+    res.status(405).json({ error: 'Method not allowed' });
+    return;
+  }
 
-async function chatHandler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  const completion = await openai.createChatCompletion({
-    // Downgraded to GPT-3.5 due to high traffic. Sorry for the inconvenience.
-    // If you have access to GPT-4, simply change the model to "gpt-4"
-    model: "gpt-4",
-    messages: [
-      {
-        role: ChatCompletionRequestMessageRoleEnum.System,
-        content: "You are a helpful assistant.",
-      },
-      
-    ].concat(req.body.messages),
-    temperature: 0,
+  res.writeHead(200, {
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache, no-transform',
+    'Connection': 'keep-alive',
   });
-  res.status(200).json({ result: completion.data.choices[0].message });
-}
 
-export default chatHandler;
+  try {
+    const assistantId = "asst_gsnqBIEwYeJnubWJoKgj8Ayo"; // Replace with your actual assistant ID
+    const thread = await openai.beta.threads.create();
+
+    await openai.beta.threads.messages.create(thread.id, {
+      role: "user",
+      content: req.body.messages[req.body.messages.length - 1].content,
+    });
+
+    const run = await openai.beta.threads.runs.create(thread.id, {
+      assistant_id: assistantId,
+    });
+
+    while (true) {
+      const runStatus = await openai.beta.threads.runs.retrieve(thread.id, run.id);
+
+      if (runStatus.status === "completed") {
+        const messages = await openai.beta.threads.messages.list(thread.id);
+        const assistantMessage = messages.data
+          .filter(message => message.role === "assistant")
+          .pop();
+
+        if (assistantMessage && assistantMessage.content[0].type === "text") {
+          const text = assistantMessage.content[0].text.value;
+          // Send the response in chunks to simulate streaming
+          for (let i = 0; i < text.length; i += 10) {
+            const chunk = text.slice(i, i + 10);
+            res.write(`data: ${JSON.stringify({ text: chunk })}\n\n`);
+            await new Promise(resolve => setTimeout(resolve, 50)); // Add a small delay between chunks
+          }
+        }
+        break;
+      } else if (runStatus.status === "failed") {
+        throw new Error("Assistant run failed");
+      }
+
+      // Wait a bit before checking again
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+
+    res.write('data: [DONE]\n\n');
+    res.end();
+
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'An error occurred', details: error instanceof Error ? error.message : String(error) });
+  }
+}
