@@ -18,7 +18,7 @@ export default async function chatHandler(req: NextApiRequest, res: NextApiRespo
   });
 
   try {
-    const assistantId = "asst_gsnqBIEwYeJnubWJoKgj8Ayo"; // Replace with your actual assistant ID
+    const assistantId = "asst_gMSgCygSc8w3G26dThtWvGyw"; // Replace with your actual assistant ID
     const thread = await openai.beta.threads.create();
 
     await openai.beta.threads.messages.create(thread.id, {
