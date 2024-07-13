@@ -42,7 +42,7 @@ These instructions will help you set up the project on your local machine.
 
 ```
 
-git clone https://github.com/hillis/gpt-4-chat-ui.git
+git clone https://github.com/saurabhag23/Lesson_plan_Interface.git
 
 ```
 
