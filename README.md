@@ -50,7 +50,7 @@ git clone https://github.com/hillis/gpt-4-chat-ui.git
 
 ```
 
-cd gpt-4-chat-ui
+cd Leson_plan_Interface
 
 ```
 
