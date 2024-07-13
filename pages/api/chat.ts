@@ -2,11 +2,11 @@ import OpenAI from "openai";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 const openai = new OpenAI({
-  apiKey: "sk-proj-4KPKTxwkL74wH4m764rAT3BlbkFJPnZsGEi1nFgJWU1bquhS", // Replace with your actual OpenAI API key
+  apiKey: "", // Replace with your actual OpenAI API key
 });
 
 // Replace this with your actual Assistant ID
-const assistantId = "asst_RTxzOXKbZR4oObdKVKZpFLMY";
+const assistantId = "";
 
 export default async function chatHandler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
