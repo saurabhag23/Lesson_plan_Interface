@@ -56,7 +56,11 @@
 }
 
 .cloudform {
-  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  max-width: 100%;
 }
 
 .textarea {
@@ -70,6 +74,10 @@
   background: #0e1524;
   color: #ECECF1;
   outline: none;
+  flex-grow: 1;
+  margin-right: 10px;
+  flex: 1 1 70%;
+  min-width: 200px;
 }
 
 .textarea:disabled {
@@ -89,6 +97,9 @@
   padding: 0.3rem;
   border: none;
   display: flex;
+  flex-shrink: 0;
+  flex: 0 0 auto;
+  margin-right: 10px;
 }
 
 .loadingwheel {
@@ -208,7 +219,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
+  position:relative;
   padding: 2rem 0;
   flex-direction: column;
 }
@@ -285,4 +296,66 @@
   width: 100%;
   text-align: center;
 }
+}
+
+.voicebutton {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 15px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.voicebutton:hover {
+  background-color: #45a049;
+}
+
+.voicebutton:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.micicon {
+  width: 30px;
+  height: 30px;
+  fill: white;
+}
+
+.listeninganimation {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #ff4b4b;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(255, 75, 75, 0.7);
+  }
+  
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(255, 75, 75, 0);
+  }
+  
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(255, 75, 75, 0);
+  }
 }

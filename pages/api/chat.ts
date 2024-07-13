@@ -2,8 +2,11 @@ import OpenAI from "openai";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 const openai = new OpenAI({
-  apiKey: "sk-proj-4KPKTxwkL74wH4m764rAT3BlbkFJPnZsGEi1nFgJWU1bquhS",
+  apiKey: "sk-proj-4KPKTxwkL74wH4m764rAT3BlbkFJPnZsGEi1nFgJWU1bquhS", // Replace with your actual OpenAI API key
 });
+
+// Replace this with your actual Assistant ID
+const assistantId = "asst_RTxzOXKbZR4oObdKVKZpFLMY";
 
 export default async function chatHandler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -18,7 +21,6 @@ export default async function chatHandler(req: NextApiRequest, res: NextApiRespo
   });
 
   try {
-    const assistantId = "asst_gMSgCygSc8w3G26dThtWvGyw"; // Replace with your actual assistant ID
     const thread = await openai.beta.threads.create();
 
     await openai.beta.threads.messages.create(thread.id, {
@@ -41,11 +43,11 @@ export default async function chatHandler(req: NextApiRequest, res: NextApiRespo
 
         if (assistantMessage && assistantMessage.content[0].type === "text") {
           const text = assistantMessage.content[0].text.value;
-          // Send the response in chunks to simulate streaming
-          for (let i = 0; i < text.length; i += 10) {
-            const chunk = text.slice(i, i + 10);
-            res.write(`data: ${JSON.stringify({ text: chunk })}\n\n`);
-            await new Promise(resolve => setTimeout(resolve, 50)); // Add a small delay between chunks
+          // Send the response word by word to simulate streaming
+          const words = text.split(' ');
+          for (const word of words) {
+            res.write(`data: ${JSON.stringify({ text: word + ' ' })}\n\n`);
+            await new Promise(resolve => setTimeout(resolve, 50)); // Reduced from 100ms to 50ms
           }
         }
         break;
