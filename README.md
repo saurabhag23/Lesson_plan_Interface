@@ -42,7 +42,7 @@ These instructions will help you set up the project on your local machine.
 
 ```
 
-git clone https://github.com/saurabhag23/Lesson_plan_Interface.git
+git clone https://github.com/hillis/gpt-4-chat-ui.git
 
 ```
 
@@ -50,7 +50,7 @@ git clone https://github.com/saurabhag23/Lesson_plan_Interface.git
 
 ```
 
-cd Leson_plan_Interface
+cd gpt-4-chat-ui
 
 ```
 
@@ -81,6 +81,8 @@ Make sure to replace **`your_openai_api_key_here`** with your actual OpenAI API 
 npm run dev
 
 ```
+2. Run the agent with python fast api 
+python fastapi_app/runserver.py
 
 Now you can open your browser and navigate to **`http://localhost:3000`** to see the chat interface in action.
 
